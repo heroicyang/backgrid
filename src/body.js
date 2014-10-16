@@ -279,8 +279,12 @@ var Body = Backgrid.Body = Backbone.View.extend({
     if (Backbone.PageableCollection &&
         collection instanceof Backbone.PageableCollection) {
 
-      collection.setSorting(order && column.get("name"), order,
-                            {sortValue: column.sortValue()});
+      // To sort a pageable collection under infinite mode on the client side.
+      var options = { sortValue: column.sortValue() };
+      if (collection.mode === "infinite") {
+        options.side = "client";
+      }
+      collection.setSorting(order && column.get("name"), order, options);
 
       if (collection.fullCollection) {
         // If order is null, pageable will remove the comparator on both sides,
